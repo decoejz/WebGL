@@ -14,6 +14,7 @@
   </body>
 
   <script>
+    var squareRotation = 0.0;
     main();
     // Início do Sistema WebGL
     function main() {
@@ -65,9 +66,20 @@ gl_FragColor = vColor;
       };
       // Rotina para contruir todos os buffers
       const buffers = initBuffers(gl);
+
+      var then = 0;
+      // Desenha a cena continuamente
+      function render(now) {
+        now *= 0.001; // converte o tempo para segundos
+        const deltaTime = now - then;
+        then = now;
+        drawScene(gl, programInfo, buffers, deltaTime);
+        requestAnimationFrame(render);
+      }
+      requestAnimationFrame(render);
       
       // Desenhando a cena
-      drawScene(gl, programInfo, buffers);
+      // drawScene(gl, programInfo, buffers);
     }
     // Initializa os shaders
     function initShaderProgram(gl, vsSource, fsSource) {
@@ -134,7 +146,11 @@ gl_FragColor = vColor;
       };
     }
 
-    function drawScene(gl, programInfo, buffers) {
+    function drawScene(gl, programInfo, buffers, deltaTime) {
+
+      // Atualiza o valor da rotação
+      squareRotation += deltaTime;
+
       gl.clearColor(0.0, 0.0, 0.0, 1.0);
       // define cor para pintar de preto sem transparência;
       gl.clearDepth(1.0); // Limpa o buffer de profundidade
@@ -162,6 +178,10 @@ gl_FragColor = vColor;
         modelViewMatrix, // matriz para transladar
         [0.0, 0.0, -6.0]
       ); // translação
+      mat4.rotate(modelViewMatrix,
+        modelViewMatrix,
+        squareRotation,
+        [0, 0, 1]);
       // Diga ao WebGL como retirar as posições do
       // atributo vertexPosition do buffer
       {
