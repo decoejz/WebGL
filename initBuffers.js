@@ -5,11 +5,10 @@ function initBuffers(gl) {
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   // Posições dos vértices do quadrado.
   const positions = [
-    -1.0, -1.0, 1.0,1.0, -1.0, 1.0,1.0, 1.0, 1.0,-1.0, 1.0, 1.0,
-    -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0,
-    -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, -1.0,
-    1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0,
-    1.0, -1.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0,
+    -1,-1,-1,   1,-1,-1,  -1,-1,1,
+    -1,-1,1,   -1,1,-1,   -1,-1,-1,
+    -1,-1,-1,   1,-1,-1,  -1,1,-1,
+    -1,1,-1,    1,-1,-1,  -1,-1,1,
   ];
   // Passe a lista de posições para o WebGL
   gl.bufferData(
@@ -23,8 +22,6 @@ function initBuffers(gl) {
     [1.0, 0.0, 0.0, 1.0],
     [0.0, 1.0, 0.0, 1.0],
     [0.0, 0.0, 1.0, 1.0],
-    [1.0, 1.0, 0.0, 1.0],
-    [1.0, 0.0, 1.0, 1.0],
   ];
 
   var colors = [];
@@ -45,12 +42,7 @@ function initBuffers(gl) {
   // Este vetor define cada face como dois triângulos, usando os
   // indices no vetor de vértices para especificar cada triângulo
   const indices = [
-    0, 1, 2, 0, 2, 3,
-    4, 5, 6, 4, 6, 7,
-    8, 9, 10, 8, 10, 11,
-    12, 13, 14, 12, 14, 15,
-    16, 17, 18, 16, 18, 19,
-    20, 21, 22, 20, 22, 23,
+    0,1,2, 3,4,5, 6,7,8, 9,10,11
   ];
 
   // Enviando os elemntos para o vetor GL

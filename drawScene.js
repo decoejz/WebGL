@@ -76,7 +76,7 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
   );
   {
     const offset = 0;
-    const vertexCount = 36;
+    const vertexCount = 12;
     const type = gl.UNSIGNED_SHORT;
     gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
   }
