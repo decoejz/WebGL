@@ -1,5 +1,4 @@
-function drawScene(gl, programInfo, buffers, deltaTime) {
-
+function drawScene(gl, programInfo, buffers, deltaTime, vertexCount) {
   // Atualiza o valor da rotação
   squareRotation += deltaTime;
 
@@ -33,10 +32,6 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
   mat4.rotate(modelViewMatrix,
     modelViewMatrix,
     squareRotation,
-    [0, 0, 1]);
-  mat4.rotate(modelViewMatrix,
-    modelViewMatrix,
-    squareRotation*.7,
     [0, 1, 0]);
   // Diga ao WebGL como retirar as posições do
   // atributo vertexPosition do buffer
@@ -76,7 +71,7 @@ function drawScene(gl, programInfo, buffers, deltaTime) {
   );
   {
     const offset = 0;
-    const vertexCount = 12;
+    // const vertexCount = 12;
     const type = gl.UNSIGNED_SHORT;
     gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
   }

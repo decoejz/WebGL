@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+      integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script src="main.js"></script>
+    <script src="initShaderProgram.js"></script>
+    <script src="loadShader.js"></script>
+    <script src="initBuffers.js"></script>
+    <script src="drawScene.js"></script>
+  </head>
+
+  <body>
+    <canvas id="glcanvas" width="640" height="480"></canvas>
+  </body>
+  <script>
+    var squareRotation = 0.0;
+    const positions = [
+      -1,-1,-1,   1,-1,-1,  -1,-1,1,
+      -1,-1,1,   -1,1,-1,   -1,-1,-1,
+      -1,-1,-1,   1,-1,-1,  -1,1,-1,
+      -1,1,-1,    1,-1,-1,  -1,-1,1,
+    ];
+    const faceColors = [
+      [1.0, 1.0, 1.0, 1.0],
+      [1.0, 0.0, 0.0, 1.0],
+      [0.0, 1.0, 0.0, 1.0],
+      [0.0, 0.0, 1.0, 1.0],
+    ];
+    const indices = [
+      0,1,2, 3,4,5, 6,7,8, 9,10,11
+    ];
+    const vertexCount = 12;
+    main(positions, faceColors, indices, vertexCount);
+  </script>
+</html>
