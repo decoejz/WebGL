@@ -37,19 +37,30 @@
       // Vertex shader
       const vsSource = `
 attribute vec4 aVertexPosition;
-attribute vec4 aVertexColor;
+// attribute vec4 aVertexColor;
+attribute vec2 aTextureCoord;
+
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
-varying lowp vec4 vColor;
+
+// varying lowp vec4 vColor;
+varying highp vec2 vTextureCoord;
+
 void main() {
-gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-vColor = aVertexColor;
+  gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+  // vColor = aVertexColor;
+  vTextureCoord = aTextureCoord;
 }
 `;
       const fsSource = `
-varying lowp vec4 vColor;
+// varying lowp vec4 vColor;
+varying highp vec2 vTextureCoord;
+
+uniform sampler2D uSampler;
+
 void main() {
-gl_FragColor = vColor;
+  // gl_FragColor = vColor;
+  gl_FragColor = texture2D(uSampler, vTextureCoord);
 }
 `;
       const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
@@ -58,15 +69,19 @@ gl_FragColor = vColor;
         program: shaderProgram,
         attribLocations: {
           vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
-          vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+          // vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+          textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
         },
         uniformLocations: {
           projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
-          modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+          // modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+          uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
         },
       };
       // Rotina para contruir todos os buffers
       const buffers = initBuffers(gl);
+
+      const texture = loadTexture(gl, 'logo.png');
 
       var then = 0;
       // Desenha a cena continuamente
@@ -74,7 +89,8 @@ gl_FragColor = vColor;
         now *= 0.001; // converte o tempo para segundos
         const deltaTime = now - then;
         then = now;
-        drawScene(gl, programInfo, buffers, deltaTime);
+        // drawScene(gl, programInfo, buffers, deltaTime);
+        drawScene(gl, programInfo, buffers, texture, deltaTime);
         requestAnimationFrame(render);
       }
       requestAnimationFrame(render);
@@ -137,24 +153,51 @@ gl_FragColor = vColor;
         gl.STATIC_DRAW
       );
 
-      const faceColors = [
-        [1.0, 1.0, 1.0, 1.0],
-        [1.0, 0.0, 0.0, 1.0],
-        [0.0, 1.0, 0.0, 1.0],
-        [0.0, 0.0, 1.0, 1.0],
-        [1.0, 1.0, 0.0, 1.0],
-        [1.0, 0.0, 1.0, 1.0],
+      // const faceColors = [
+      //   [1.0, 1.0, 1.0, 1.0],
+      //   [1.0, 0.0, 0.0, 1.0],
+      //   [0.0, 1.0, 0.0, 1.0],
+      //   [0.0, 0.0, 1.0, 1.0],
+      //   [1.0, 1.0, 0.0, 1.0],
+      //   [1.0, 0.0, 1.0, 1.0],
+      // ];
+
+      // var colors = [];
+      // for (var j = 0; j < faceColors.length; ++j) {
+      //   const c = faceColors[j];
+      //   colors = colors.concat(c, c, c, c);
+      // }
+
+      // const colorBuffer = gl.createBuffer();
+      // gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+      // gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
+      // Definindo as coordenadas de textura
+      const textureCoordBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
+
+      const textureCoordinates = [
+        // Frente
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 1.0, 1.0,
+        // Traseira
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 1.0, 1.0,
+        // Superio
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 1.0, 1.0,
+        // Inferior
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 1.0, 1.0,
+        // Direita
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 1.0, 1.0,
+        // Esquerda
+        1.0, 0.0, 0.0, 0.0,
+        0.0, 1.0, 1.0, 1.0,
       ];
 
-      var colors = [];
-      for (var j = 0; j < faceColors.length; ++j) {
-        const c = faceColors[j];
-        colors = colors.concat(c, c, c, c);
-      }
-
-      const colorBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
 
       // Contruindo vetor de elementos que especifica os indices dos vértices
       // para cada face do cubo
@@ -178,12 +221,13 @@ gl_FragColor = vColor;
 
       return {
         position: positionBuffer,
-        color: colorBuffer,
+        // color: colorBuffer,
+        textureCoord: textureCoordBuffer,
         indices: indexBuffer,
       };
     }
 
-    function drawScene(gl, programInfo, buffers, deltaTime) {
+    function drawScene(gl, programInfo, buffers, texture, deltaTime) {
 
       // Atualiza o valor da rotação
       squareRotation += deltaTime;
@@ -223,27 +267,48 @@ gl_FragColor = vColor;
         modelViewMatrix,
         squareRotation*.7,
         [0, 1, 0]);
-      // Diga ao WebGL como retirar as posições do
-      // atributo vertexPosition do buffer
+      // // Diga ao WebGL como retirar as posições do
+      // // atributo vertexPosition do buffer
+      // {
+      //   const numComponents = 3; // pega 3 valores por iteração
+      //   const type = gl.FLOAT; // the data in the buffer is 32bit floats
+      //   const normalize = false; // don't normalize
+      //   const stride = 0; // quantos bytes para um conjunto de valores
+      //   // 0 = use type and numComponents above
+      //   const offset = 0;
+      //   // how many bytes inside the buffer to start from
+      //   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+      //   gl.vertexAttribPointer(
+      //     programInfo.attribLocations.vertexPosition,
+      //     numComponents,
+      //     type,
+      //     normalize,
+      //     stride,
+      //     offset
+      //   );
+      //   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+      // }
+
+      // Diga ao WebGL como retirar as coordenadas de textura do
+      // buffer de coordenadas de textura para colocar no atributo textureCoord
       {
-        const numComponents = 3; // pega 3 valores por iteração
-        const type = gl.FLOAT; // the data in the buffer is 32bit floats
-        const normalize = false; // don't normalize
-        const stride = 0; // quantos bytes para um conjunto de valores
-        // 0 = use type and numComponents above
-        const offset = 0;
-        // how many bytes inside the buffer to start from
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-        gl.vertexAttribPointer(
-          programInfo.attribLocations.vertexPosition,
+          const numComponents = 2;
+          const type = gl.FLOAT;
+          const normalize = false;
+          const stride = 0;
+          const offset = 0;
+          gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textureCoord);
+          gl.vertexAttribPointer(
+          programInfo.attribLocations.textureCoord,
           numComponents,
           type,
           normalize,
           stride,
-          offset
-        );
-        gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+          offset);
+          gl.enableVertexAttribArray(
+          programInfo.attribLocations.textureCoord);
       }
+
       // Diga ao WebGL quais indices usar para conectar os vértices
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, buffers.indices);
       // Diga ao WebGL para usar nosso programa ao desenhar
@@ -259,6 +324,15 @@ gl_FragColor = vColor;
         false,
         modelViewMatrix
       );
+
+      // Especifica o mapeamento de texturas
+      // Informe o WebGL que se deseja trabalhar com a unidade de textura 0
+      gl.activeTexture(gl.TEXTURE0);
+      // Vincule (bind) a textura com a unidade 0
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+      // Diga ao shader que limitamos a textura à unidade de textura 0
+      gl.uniform1i(programInfo.uniformLocations.uSampler, 0);
+
       {
         const offset = 0;
         const vertexCount = 36;
@@ -284,6 +358,51 @@ gl_FragColor = vColor;
         );
         gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
       }
+    }
+
+    // Carrega a textura para o contexto WebGL
+    function loadTexture(gl, url) {
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        // Como as imagens precisam ser baixadas da internet,
+        // elas podem demorar um pouco até estarem prontas.
+        // Assim coloque um único pixel na textura para que
+        // possamos usá-la imediatamente. Quando a imagem terminar
+        // de carregar, vamos atualizar a textura com o conteúdo dela.
+        const level = 0;
+        const internalFormat = gl.RGBA;
+        const width = 1;
+        const height = 1;
+        const border = 0;
+        const srcFormat = gl.RGBA;
+        const srcType = gl.UNSIGNED_BYTE;
+        const pixel = new Uint8Array([0, 0, 255, 255]); // opaque blue
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+        width, height, border, srcFormat, srcType,
+        pixel);
+        const image = new Image();
+        image.onload = function() {
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+        srcFormat, srcType, image);
+        // WebGL1 tem requisitos diferentes para potência de 2 em imagens
+        // versus não potência de 2 nas imagens, portanto, verifique se
+        // a imagem é potência de 2 em ambas as dimensões.
+        if (isPowerOf2(image.width) && isPowerOf2(image.height)) {
+            gl.generateMipmap(gl.TEXTURE_2D);
+            // Potência de 2, gere os mipmaps
+        } else {
+          // Não é potência de 2. Desligar mipmaps e wrapping para clamp to edge
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        }
+        };
+        image.src = url;
+        return texture;
+    }
+    function isPowerOf2(value) {
+        return (value & (value - 1)) == 0;
     }
   </script>
 </html>
