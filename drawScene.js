@@ -1,4 +1,4 @@
-function drawScene(gl, programInfo, buffers, deltaTime, vertexCount) {
+function drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation, rotation) {
   // Atualiza o valor da rotação
   squareRotation += deltaTime;
 
@@ -24,15 +24,14 @@ function drawScene(gl, programInfo, buffers, deltaTime, vertexCount) {
   // Move a posição do desenho para onde queremos
   // desenhar o quadrado.
   mat4.translate(
-    modelViewMatrix,
-    // destino
+    modelViewMatrix, // destino
     modelViewMatrix, // matriz para transladar
-    [0.0, 0.0, -6.0]
-  ); // translação
+    translation // translação
+  );
   mat4.rotate(modelViewMatrix,
     modelViewMatrix,
     squareRotation,
-    [0, 1, 0]);
+    rotation);//
   // Diga ao WebGL como retirar as posições do
   // atributo vertexPosition do buffer
   {

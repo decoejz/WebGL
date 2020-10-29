@@ -48,7 +48,6 @@ varying highp vec2 vTextureCoord;
 
 void main() {
   gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
-  // vColor = aVertexColor;
   vTextureCoord = aTextureCoord;
 }
 `;
@@ -59,7 +58,6 @@ varying highp vec2 vTextureCoord;
 uniform sampler2D uSampler;
 
 void main() {
-  // gl_FragColor = vColor;
   gl_FragColor = texture2D(uSampler, vTextureCoord);
 }
 `;
@@ -74,14 +72,15 @@ void main() {
         },
         uniformLocations: {
           projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
-          // modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+          modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
           uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
         },
       };
       // Rotina para contruir todos os buffers
       const buffers = initBuffers(gl);
 
-      const texture = loadTexture(gl, 'logo.png');
+      // const texture = loadTexture(gl, 'logo.png');
+      const texture = loadTexture(gl, 'https://raw.githubusercontent.com/lpsoares/WebGL/main/logo.png' );
 
       var then = 0;
       // Desenha a cena continuamente
@@ -267,27 +266,27 @@ void main() {
         modelViewMatrix,
         squareRotation*.7,
         [0, 1, 0]);
-      // // Diga ao WebGL como retirar as posições do
-      // // atributo vertexPosition do buffer
-      // {
-      //   const numComponents = 3; // pega 3 valores por iteração
-      //   const type = gl.FLOAT; // the data in the buffer is 32bit floats
-      //   const normalize = false; // don't normalize
-      //   const stride = 0; // quantos bytes para um conjunto de valores
-      //   // 0 = use type and numComponents above
-      //   const offset = 0;
-      //   // how many bytes inside the buffer to start from
-      //   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
-      //   gl.vertexAttribPointer(
-      //     programInfo.attribLocations.vertexPosition,
-      //     numComponents,
-      //     type,
-      //     normalize,
-      //     stride,
-      //     offset
-      //   );
-      //   gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-      // }
+      // Diga ao WebGL como retirar as posições do
+      // atributo vertexPosition do buffer
+      {
+        const numComponents = 3; // pega 3 valores por iteração
+        const type = gl.FLOAT; // the data in the buffer is 32bit floats
+        const normalize = false; // don't normalize
+        const stride = 0; // quantos bytes para um conjunto de valores
+        // 0 = use type and numComponents above
+        const offset = 0;
+        // how many bytes inside the buffer to start from
+        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.position);
+        gl.vertexAttribPointer(
+          programInfo.attribLocations.vertexPosition,
+          numComponents,
+          type,
+          normalize,
+          stride,
+          offset
+        );
+        gl.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
+      }
 
       // Diga ao WebGL como retirar as coordenadas de textura do
       // buffer de coordenadas de textura para colocar no atributo textureCoord
@@ -299,14 +298,14 @@ void main() {
           const offset = 0;
           gl.bindBuffer(gl.ARRAY_BUFFER, buffers.textureCoord);
           gl.vertexAttribPointer(
-          programInfo.attribLocations.textureCoord,
-          numComponents,
-          type,
-          normalize,
-          stride,
-          offset);
+            programInfo.attribLocations.textureCoord,
+            numComponents,
+            type,
+            normalize,
+            stride,
+            offset);
           gl.enableVertexAttribArray(
-          programInfo.attribLocations.textureCoord);
+            programInfo.attribLocations.textureCoord);
       }
 
       // Diga ao WebGL quais indices usar para conectar os vértices
@@ -333,30 +332,30 @@ void main() {
       // Diga ao shader que limitamos a textura à unidade de textura 0
       gl.uniform1i(programInfo.uniformLocations.uSampler, 0);
 
+      // // Diga ao WebGL como retirar as cores do buffer de cores
+      // // para colocar no atributo vertexColor.
+      // {
+      //   const numComponents = 4;
+      //   const type = gl.FLOAT;
+      //   const normalize = false;
+      //   const stride = 0;
+      //   const offset = 0;
+      //   gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+      //   gl.vertexAttribPointer(
+      //     programInfo.attribLocations.vertexColor,
+      //     numComponents,
+      //     type,
+      //     normalize,
+      //     stride,
+      //     offset
+      //   );
+      //   gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+      // }
       {
         const offset = 0;
         const vertexCount = 36;
         const type = gl.UNSIGNED_SHORT;
         gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
-      }
-      // Diga ao WebGL como retirar as cores do buffer de cores
-      // para colocar no atributo vertexColor.
-      {
-        const numComponents = 4;
-        const type = gl.FLOAT;
-        const normalize = false;
-        const stride = 0;
-        const offset = 0;
-        gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
-        gl.vertexAttribPointer(
-          programInfo.attribLocations.vertexColor,
-          numComponents,
-          type,
-          normalize,
-          stride,
-          offset
-        );
-        gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
       }
     }
 
@@ -398,6 +397,7 @@ void main() {
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         }
         };
+        image.crossOrigin = 'anonymous';
         image.src = url;
         return texture;
     }

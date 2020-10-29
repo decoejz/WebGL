@@ -30,16 +30,23 @@
     ];
     const faceColors = [
       [1.0, 1.0, 1.0, 1.0],
-      [1.0, 1.0, 1.0, 1.0],
+      [0.0, 0.0, 0.0, 1.0],
       [1.0, 0.0, 0.0, 1.0],
       [0.0, 1.0, 0.0, 1.0],
       [0.0, 0.0, 1.0, 1.0],
       [1.0, 1.0, 0.0, 1.0],
     ];
+
+    var colors = [];
+    for (var j = 0; j < faceColors.length; ++j) {
+      const c = faceColors[j];
+      colors = colors.concat(c, c, c);
+    }
+
     const indices = [
       0,1,2, 0,1,3, 6,7,8, 9,10,11, 12,13,14, 15,16,17,
     ];
     const vertexCount = 18;
-    main(positions, faceColors, indices, vertexCount);
+    main(positions, colors, indices, vertexCount, [0.0, 0.0, -6.0], [0, 1, 0]);
   </script>
 </html>

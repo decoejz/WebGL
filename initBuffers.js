@@ -1,4 +1,4 @@
-function initBuffers(gl, positions, faceColors, indices) {
+function initBuffers(gl, positions, colors, indices) {
   // Cria um buffer para as posições dos vértices do quadrado.
   const positionBuffer = gl.createBuffer();
   // Selecione o positionBuffer para aplicar as operações de buffer.
@@ -10,12 +10,6 @@ function initBuffers(gl, positions, faceColors, indices) {
     new Float32Array(positions),
     gl.STATIC_DRAW
   );
-
-  var colors = [];
-  for (var j = 0; j < faceColors.length; ++j) {
-    const c = faceColors[j];
-    colors = colors.concat(c, c, c);
-  }
   
   const colorBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);

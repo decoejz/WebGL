@@ -1,5 +1,5 @@
 // Início do Sistema WebGL
-function main(positions, faceColors, indices, vertexCount) {
+function main(positions, faceColors, indices, vertexCount, translation, rotation) {
   const canvas = document.querySelector("#glcanvas");
   // Initializa o context GL
   const gl = canvas.getContext("webgl");
@@ -55,7 +55,7 @@ gl_FragColor = vColor;
     now *= 0.001; // converte o tempo para segundos
     const deltaTime = now - then;
     then = now;
-    drawScene(gl, programInfo, buffers, deltaTime, vertexCount);
+    drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation, rotation);
     requestAnimationFrame(render);
   }
   requestAnimationFrame(render);

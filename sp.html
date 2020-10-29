@@ -8,6 +8,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="main.js"></script>
+    <script src="sp.js"></script>
     <script src="initShaderProgram.js"></script>
     <script src="loadShader.js"></script>
     <script src="initBuffers.js"></script>
@@ -20,30 +21,6 @@
   </body>
   <script>
     var squareRotation = 0.0;
-    const positions = [
-       0,-1,1,  1,-1,0,  0,-1,0,
-       0,-1,1,  0,-1,0,  0, 1,0,
-       1,-1,0,  0,-1,0,  0, 1,0,
-       1,-1,0,  0, 1,0,  0,-1,1,
-    ];
-    const faceColors = [
-      [1.0, 1.0, 1.0, 1.0],
-      [1.0, 0.0, 0.0, 1.0],
-      [0.0, 1.0, 0.0, 1.0],
-      [0.0, 0.0, 1.0, 1.0],
-    ];
-    
-
-    var colors = [];
-    for (var j = 0; j < faceColors.length; ++j) {
-      const c = faceColors[j];
-      colors = colors.concat(c, c, c);
-    }
-
-    const indices = [
-      0,1,2, 3,4,5, 6,7,8, 9,10,11
-    ];
-    const vertexCount = 12;
-    main(positions, colors, indices, vertexCount, [0.0, 0.0, -6.0], [0, 1, 0]);
+    main(positions, colors, indices, vertexCount, [-30.0, -5.0, -100.0], [1, 1, 0]);
   </script>
 </html>
