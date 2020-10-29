@@ -21,7 +21,7 @@ with open('sp.pto', 'r') as file:
                 if y_int <= 40:
                     faceColors += [0.0, 0.2, 1.0-y_int/40, 1.0]
                 else:
-                    faceColors += [1.0*y_int/2000, 0.6, 0.35, 1.0]
+                    faceColors += [1.0*y_int/2000, 0.8*y_int/2000, 0.35, 1.0]
                 positions += [x, y_int/100, z]
                 if (z<altura-1 and x<largura-1):
                     indices += [z*largura+x, z*largura+x+1, (z+1)*largura+x]
