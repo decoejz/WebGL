@@ -1,0 +1,26 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+      integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+      crossorigin="anonymous"
+    ></script>
+    <script src="main.js"></script>
+    <script src="sp_territorio.js"></script>
+    <script src="initShaderProgram.js"></script>
+    <script src="loadShader.js"></script>
+    <script src="initBuffers.js"></script>
+    <script src="drawScene.js"></script>
+  </head>
+
+  <body>
+    <canvas id="glcanvas" width="640" height="480"></canvas>
+    <p><a href='./index.html'>< Voltar</a></p>
+  </body>
+  <script>
+    var squareRotation = -20.0;
+    main(positions, colors, indices, vertexCount, [-33.5, -25.0, -100.0], [1, 0, 0], false);
+  </script>
+</html>
