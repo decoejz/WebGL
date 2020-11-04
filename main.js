@@ -58,8 +58,8 @@ gl_FragColor = vColor;
   const buffers = initBuffers(gl, positions, faceColors, indices);
   drawScene(gl, programInfo, buffers, 0, vertexCount, translation, rotation, gl.TRIANGLES);
 
-  // if (spPos) {
-  //   const buffers2 = initBuffers(gl, spPos, spColor, spIndex);
-  //   drawScene(gl, programInfo, buffers2, 0, spVertexCount, translation, rotation, gl.LINE_STRIP);
-  // }
+  if (spPos) {
+    const buffers2 = initBuffers(gl, spPos, spColor, spIndex);
+    drawScene(gl, programInfo, buffers2, 0, spVertexCount, translation, rotation, gl.LINE_STRIP);
+  }
 }

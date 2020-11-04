@@ -22,8 +22,8 @@ with open('sp.pto', 'r') as file:
         for line in points.readlines():
             lat_lng = line.split(' ')
             lat, lng = float(lat_lng[1]), float(lat_lng[0])
-            x = (largura * (lat - lat_s)) / (lat_b - lat_s)
-            z = (altura * (lng - lng_s)) / (lng_b - lng_s)
+            x = (altura * (lat - lat_s)) / (lat_b - lat_s)
+            z = (largura * (lng - lng_s)) / (lng_b - lng_s)
             localizacao +=  [z, 10, x]
             indices2.append(state_index)
             color2 += [1,1,1,1]
