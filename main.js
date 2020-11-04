@@ -1,5 +1,5 @@
 // Início do Sistema WebGL
-function main(positions, faceColors, indices, vertexCount, translation, rotation, rotateBool = true) {
+function main(positions, faceColors, indices, vertexCount, translation, rotation, spPos, spIndex, spColor, spVertexCount) {
   const canvas = document.querySelector("#glcanvas");
   // Initializa o context GL
   const gl = canvas.getContext("webgl");
@@ -46,17 +46,20 @@ gl_FragColor = vColor;
       modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
     },
   };
+
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);  // define cor para pintar de preto sem transparência
+  gl.clearDepth(1.0);                 // Limpa o buffer de profundidade
+  gl.enable(gl.DEPTH_TEST);           // Liga o teste de profundidade (Z-Buffer)
+
+  // Pinta todo o canvas com a cor padrão (preto)
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
   // Rotina para contruir todos os buffers
   const buffers = initBuffers(gl, positions, faceColors, indices);
+  drawScene(gl, programInfo, buffers, 0, vertexCount, translation, rotation, gl.TRIANGLES);
 
-  var then = 0;
-  // Desenha a cena continuamente
-  function render(now) {
-    now *= 0.001; // converte o tempo para segundos
-    const deltaTime = (rotateBool) ? now - then : 0;
-    then = now;
-    drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation, rotation);
-    requestAnimationFrame(render);
-  }
-  requestAnimationFrame(render);
+  // if (spPos) {
+  //   const buffers2 = initBuffers(gl, spPos, spColor, spIndex);
+  //   drawScene(gl, programInfo, buffers2, 0, spVertexCount, translation, rotation, gl.LINE_STRIP);
+  // }
 }

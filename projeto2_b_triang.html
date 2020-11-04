@@ -7,7 +7,6 @@
       integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
       crossorigin="anonymous"
     ></script>
-    <script src="main.js"></script>
     <script src="initShaderProgram.js"></script>
     <script src="loadShader.js"></script>
     <script src="initBuffers.js"></script>
@@ -44,6 +43,68 @@
       0,1,2, 3,4,5, 6,7,8, 9,10,11
     ];
     const vertexCount = 12;
+    // Início do Sistema WebGL
+function main(positions, faceColors, indices, vertexCount, translation, rotation, rotateBool = true) {
+  const canvas = document.querySelector("#glcanvas");
+  // Initializa o context GL
+  const gl = canvas.getContext("webgl");
+  // Caso o navegador não suporte WebGL
+  if (!gl) {
+    alert(
+      " Não foi possível iniciar o WebGL. Seu navegador não deve suportá-lo."
+    );
+    return;
+  }
+  // Defina a cor de limpeza para preto sem transparência
+  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  // Limpe o buffer de cores com a cor especificada
+  gl.clear(gl.COLOR_BUFFER_BIT);
+
+  // Vertex shader
+  const vsSource = `
+attribute vec4 aVertexPosition;
+attribute vec4 aVertexColor;
+uniform mat4 uModelViewMatrix;
+uniform mat4 uProjectionMatrix;
+varying lowp vec4 vColor;
+void main() {
+gl_Position = uProjectionMatrix * uModelViewMatrix * aVertexPosition;
+vColor = aVertexColor;
+}
+`;
+  const fsSource = `
+varying lowp vec4 vColor;
+void main() {
+gl_FragColor = vColor;
+}
+`;
+  const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+
+  const programInfo = {
+    program: shaderProgram,
+    attribLocations: {
+      vertexPosition: gl.getAttribLocation(shaderProgram, "aVertexPosition"),
+      vertexColor: gl.getAttribLocation(shaderProgram, "aVertexColor"),
+    },
+    uniformLocations: {
+      projectionMatrix: gl.getUniformLocation(shaderProgram, "uProjectionMatrix"),
+      modelViewMatrix: gl.getUniformLocation(shaderProgram, "uModelViewMatrix"),
+    },
+  };
+  // Rotina para contruir todos os buffers
+  const buffers = initBuffers(gl, positions, faceColors, indices);
+
+  var then = 0;
+  // Desenha a cena continuamente
+  function render(now) {
+    now *= 0.001; // converte o tempo para segundos
+    const deltaTime = (rotateBool) ? now - then : 0;
+    then = now;
+    drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation, rotation);
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+}
     main(positions, colors, indices, vertexCount, [0.0, 0.0, -6.0], [0, 1, 0]);
   </script>
 </html>
