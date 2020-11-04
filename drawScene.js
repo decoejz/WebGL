@@ -1,13 +1,7 @@
-function drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation, rotation) {
+function drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation, rotation, geometria) {
   // Atualiza o valor da rotação
   squareRotation += deltaTime;
 
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  // define cor para pintar de preto sem transparência;
-  gl.clearDepth(1.0); // Limpa o buffer de profundidade
-  gl.enable(gl.DEPTH_TEST); // Liga o teste de profundidade (Z-Buffer)
-  // Pinta todo o canvas com a cor padrão (preto)
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   // Cria uma matriz de perspectiva com um campo de visão de 45 graus,
   // com a proporção de largura/altura correspondente ao tamanho de
   // exibição da tela, com objetos visiveis entre 0.1 e 100 unidades
@@ -32,6 +26,25 @@ function drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation
     modelViewMatrix,
     squareRotation,
     rotation);//
+  // Diga ao WebGL como retirar as cores do buffer de cores
+  // para colocar no atributo vertexColor.
+  {
+    const numComponents = 4;
+    const type = gl.FLOAT;
+    const normalize = false;
+    const stride = 0;
+    const offset = 0;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+    gl.vertexAttribPointer(
+      programInfo.attribLocations.vertexColor,
+      numComponents,
+      type,
+      normalize,
+      stride,
+      offset
+    );
+    gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+  }
   // Diga ao WebGL como retirar as posições do
   // atributo vertexPosition do buffer
   {
@@ -72,25 +85,6 @@ function drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation
     const offset = 0;
     // const vertexCount = 12;
     const type = gl.UNSIGNED_SHORT;
-    gl.drawElements(gl.TRIANGLES, vertexCount, type, offset);
-  }
-  // Diga ao WebGL como retirar as cores do buffer de cores
-  // para colocar no atributo vertexColor.
-  {
-    const numComponents = 4;
-    const type = gl.FLOAT;
-    const normalize = false;
-    const stride = 0;
-    const offset = 0;
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
-    gl.vertexAttribPointer(
-      programInfo.attribLocations.vertexColor,
-      numComponents,
-      type,
-      normalize,
-      stride,
-      offset
-    );
-    gl.enableVertexAttribArray(programInfo.attribLocations.vertexColor);
+    gl.drawElements(geometria, vertexCount, type, offset);
   }
 }
