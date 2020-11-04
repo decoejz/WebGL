@@ -24,7 +24,7 @@ with open('sp.pto', 'r') as file:
             lat, lng = float(lat_lng[1]), float(lat_lng[0])
             x = (altura * (lat - lat_s)) / (lat_b - lat_s)
             z = (largura * (lng - lng_s)) / (lng_b - lng_s)
-            localizacao +=  [z, 10, x]
+            localizacao +=  [z, 0, x]
             indices2.append(state_index)
             color2 += [1,1,1,1]
             state_index+=1

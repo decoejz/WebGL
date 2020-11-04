@@ -2,12 +2,12 @@ function drawScene(gl, programInfo, buffers, deltaTime, vertexCount, translation
   // Atualiza o valor da rotação
   squareRotation += deltaTime;
 
-  gl.clearColor(0.0, 0.0, 0.0, 1.0);
-  // define cor para pintar de preto sem transparência;
-  gl.clearDepth(1.0); // Limpa o buffer de profundidade
-  gl.enable(gl.DEPTH_TEST); // Liga o teste de profundidade (Z-Buffer)
-  // Pinta todo o canvas com a cor padrão (preto)
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  // gl.clearColor(0.0, 0.0, 0.0, 1.0);
+  // // define cor para pintar de preto sem transparência;
+  // gl.clearDepth(1.0); // Limpa o buffer de profundidade
+  // gl.enable(gl.DEPTH_TEST); // Liga o teste de profundidade (Z-Buffer)
+  // // Pinta todo o canvas com a cor padrão (preto)
+  // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   // Cria uma matriz de perspectiva com um campo de visão de 45 graus,
   // com a proporção de largura/altura correspondente ao tamanho de
   // exibição da tela, com objetos visiveis entre 0.1 e 100 unidades
